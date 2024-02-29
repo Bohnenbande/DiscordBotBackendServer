@@ -25,6 +25,16 @@ public class RestClient {
 		return getWinrateForRolePrivate(role, puid, 20, 0);
 	}
 
+	public static double getWinrate(String puid, int count, int start){
+		return getWinratePrivate(puid, count, start);
+	}
+	public static double getWinrate(String puid, int count){
+		return getWinratePrivate(puid, count, 0);
+	}
+	public static double getWinrate(String puid){
+		return getWinratePrivate(puid, 20, 0);
+	}
+
 	private static List<MatchData> getMatches(String puid, int count, int start) {
 		List<MatchData> matchDataList = new ArrayList<>();
 
@@ -59,6 +69,20 @@ public class RestClient {
 		// List<MatchData> test = matchDataList.stream().filter(data -> data.getInfo().getParticipants().stream().anyMatch(player -> player.getPuuid().equals(puid) && player.getWin())).toList();
 		return ((double)test.size()/(double)matchDataList.size())*100;
 	}
+	private static double getWinratePrivate(String puid, int count, int start){
+		List<MatchData> matchDataList = getMatches(puid, count, start);
+
+		List<MatchData> test = matchDataList.stream().filter(data ->
+						data.getInfo().getParticipants()
+								.stream()
+								.anyMatch(player ->
+										player.getPuuid().equals(puid) && player.getWin()))
+				.toList();
+		return ((double)test.size()/(double)matchDataList.size())*100;
+	}
+
+	//TODO: ideen: winrate nach Item, Keystone und Summonerspell
+
 
 
 }
